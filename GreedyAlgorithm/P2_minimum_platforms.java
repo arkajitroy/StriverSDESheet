@@ -1,0 +1,36 @@
+package GreedyAlgorithm;
+
+import java.util.*;
+
+class Main {
+    public static int findPlatform(int[] arr, int[] dep, int n){
+        Arrays.sort(arr);
+        Arrays.sort(dep);
+
+        int plat_required = 1, result = 1;
+        int i = 1, j = 0;
+
+        while (i < n && j < n) {
+            
+            if(arr[i] <= dep[j]){
+                plat_required++;
+                i++;
+            }
+            else if(arr[i] > dep[j]){
+                plat_required--;
+                j++;
+            }
+
+            if(plat_required > result) result = plat_required;
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        int[] arr ={900,945,955,1100,1500,1800};
+		int[] dep={920,1200,1130,1150,1900,2000};
+		int n=arr.length;
+		int totalCount=findPlatform(arr,dep,n);
+		System.out.println("Minimum number of Platforms required "+totalCount);
+    }    
+}
