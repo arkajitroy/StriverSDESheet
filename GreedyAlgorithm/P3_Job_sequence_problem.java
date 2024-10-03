@@ -13,42 +13,45 @@ class Job {
 
 class solve {
    int[] JobScheduling(Job arr[], int n) {
-      Arrays.sort(arr, (a, b) -> (b.profit - a.profit));
+      // Step 1: Sort jobs by profit in descending order
+        Arrays.sort(arr, (a, b) -> (b.profit - a.profit));
 
-      int maxi = 0;
-      for (int i = 0; i < n; i++) {
-         if (arr[i].deadline > maxi) {
-            maxi = arr[i].deadline;
-         }
-      }
+        // Step 2: Find the maximum deadline to determine the size of the result array
+        int maxDeadline = 0;
+        for (int i = 0; i < n; i++) {
+            if (arr[i].deadline > maxDeadline) maxDeadline = arr[i].deadline;
+        }
 
-      int result[] = new int[maxi + 1];
+        // Step 3: Create a result array to track available slots
+        // Initialize result array with -1 indicating free slots
+        int[] result = new int[maxDeadline + 1];
+        for (int i = 1; i <= maxDeadline; i++) {
+            result[i] = -1; // All slots initially free
+        }
 
-      for (int i = 1; i <= maxi; i++) {
-         result[i] = -1;
-      }
+        // Variables to track the number of jobs scheduled and the total profit
+        int jobCount = 0;
+        int totalProfit = 0;
 
-      int countJobs = 0, jobProfit = 0;
-
-      for (int i = 0; i < n; i++) {
-
-         for (int j = arr[i].deadline; j > 0; j--) {
-
-            // Free slot found 
-            if (result[j] == -1) {
-               result[j] = i;
-               countJobs++;
-               jobProfit += arr[i].profit;
-               break;
+        // Step 4: Iterate over each job and try to schedule it
+        for (int i = 0; i < n; i++) {
+            // Check for a free slot from the job's deadline moving backwards
+            for (int j = arr[i].deadline; j > 0; j--) {
+                // If a free slot is found, schedule the job
+                if (result[j] == -1) {
+                    result[j] = i; // Assign job to this slot
+                    jobCount++; // Increment the job count
+                    totalProfit += arr[i].profit; // Add profit
+                    break; // Job scheduled, move to the next job
+                }
             }
-         }
-      }
+        }
 
-      int ans[] = new int[2];
-      ans[0] = countJobs;
-      ans[1] = jobProfit;
-      return ans;
-
+        // Step 5: Return the result as an array containing the number of jobs and total profit
+        int[] ans = new int[2];
+        ans[0] = jobCount; // Number of jobs scheduled
+        ans[1] = totalProfit; // Total profit earned
+        return ans;
    }
 }
 class Main {
